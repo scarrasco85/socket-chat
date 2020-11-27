@@ -30,7 +30,7 @@ socket.on('disconnect', function() {
     console.log('Perdimos conexión con el servidor');
 });
 
-// Send information
+// Send Message
 socket.emit('enviarMensaje', {
     user: 'Sergio',
     message: 'Hola mundo'
@@ -48,4 +48,9 @@ socket.on('sendMessage', function(resp) {
 // Escuchar cuando un usuario entra o sale del chat
 socket.on('listUsersConected', function(listUsers) {
     console.log('Servidor responde, nueva lista de usuarios: ', listUsers);
+});
+
+// Listening Private messages
+socket.on('privateMessage', function(message) {
+    console.log('Mensaje Privado: ', message);
 });

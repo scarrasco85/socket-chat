@@ -59,4 +59,13 @@ io.on('connection', (client) => {
         client.broadcast.emit('listUsersConected', users.getUsers());
     });
 
+    // Private messages, escucha cuando un cliente quiere mandar un mensaje privado a otro usuario, y se lo
+    // envía
+    client.on('privateMessage', data => {
+
+        let userEmisor = users.getUser(client.id);
+        // Enviamos el mensaje a un usuario según su id
+        client.broadcast.to(data.id_receptor).emit('privateMessage', sendMessage(userEmisor.userName, data.message));
+    });
+
 });
