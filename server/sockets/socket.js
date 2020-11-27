@@ -13,16 +13,20 @@ io.on('connection', (client) => {
     // el array al usuario que se acaba de conectar
     client.on('entryToChat', (data, callback) => {
 
-        if (!data.name) {
+        if (!data.userName || !data.chatRoom) {
             return callback({
                 error: true,
-                message: 'Nombre es requerido'
+                message: 'Nombre/sala es requerido'
             });
         }
 
-        // El id del usuario lo obtenemos del id del objeto client - devuelve array con todos los usuarios
-        let usersConected = users.addUser(client.id, data.name);
-        console.log(users, 'ha entrado en el chat');
+        //Unimos el usuario a la sala
+        client.join(data.chatRoom);
+
+        // Añadimos el usuario y obtenemso el array con todos los usuarios conectados. El id del usuario lo 
+        // obtenemos del id del objeto client - devuelve array con todos los usuarios
+        let usersConected = users.addUser(client.id, data.userName, data.chatRoom);
+        console.log(usersConected, 'ha entrado en el chat');
 
         // Cada vez que un usuario se conecta se le envía a todos los usuarios la nueva lista de usuarios
         // conectados

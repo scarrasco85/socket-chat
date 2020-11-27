@@ -5,14 +5,15 @@ var socket = io();
 
 var params = new URLSearchParams(window.location.search);
 
-if (!params.has('name')) {
+if (!params.has('userName') || !params.has('chatRoom')) {
 
     window.location = 'index.html';
-    throw new Error('Name is required');
+    throw new Error('El nombre y la sala son necesarios');
 }
 
 var user = {
-    name: params.get('name')
+    userName: params.get('userName'),
+    chatRoom: params.get('chatRoom')
 };
 
 socket.on('connect', function() {

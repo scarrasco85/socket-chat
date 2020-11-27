@@ -7,9 +7,9 @@ class Users {
     }
 
     // Add a person to chat
-    addUser(id, userName) {
+    addUser(id, userName, chatRoom) {
 
-        let user = { id, userName };
+        let user = { id, userName, chatRoom };
 
         this.users.push(user);
 
