@@ -24,6 +24,9 @@ socket.on('connect', function() {
     // Solicita que un usuario entre al chat
     socket.emit('entryToChat', user, function(resp) {
         console.log('users conected: ', resp);
+        // renderUsers():definida en socket-chat-jquery.js, se importa antes que este archivo en chat.html
+        // por eso la detecta
+        renderUsers(resp);
     });
 });
 
@@ -48,7 +51,8 @@ socket.on('sendMessage', function(resp) {
 
 // Escuchar cuando un usuario entra o sale del chat
 socket.on('listUsersConected', function(listUsers) {
-    console.log('Servidor responde, nueva lista de usuarios: ', listUsers);
+    //console.log('Servidor responde, nueva lista de usuarios: ', listUsers);
+    renderUsers(listUsers);
 });
 
 // Listening Private messages

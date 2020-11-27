@@ -53,8 +53,9 @@
                                         <div class="form-material">
                                             <input class="form-control p-20" type="text" placeholder="Buscar Contacto">
                                         </div>
-                                        <ul class="chatonline style-none" id="divUsuarios">
-                                            <li>
+                                        <!-- Cargamos usuarios desde javascript-->
+                                        <ul class="chatonline style-none" id="divUsers">
+                                            <!-- <li>
                                                 <a href="javascript:void(0)" class="active"> Chat de <span> Juegos</span></a>
                                             </li>
                                             <li>
@@ -80,7 +81,7 @@
                                             </li>
                                             <li>
                                                 <a href="javascript:void(0)"><img src="assets/images/users/8.jpg" alt="user-img" class="img-circle"> <span>Pwandeep rajan <small class="text-success">online</small></span></a>
-                                            </li>
+                                            </li> -->
                                             <li class="p-20"></li>
                                         </ul>
                                     </div>
@@ -218,6 +219,9 @@
     <script src="js/libs/jquery.min.js"></script>
     <script src="socket.io/socket.io.js"></script>
 
+    <!-- Important, socket-chat-jquery.js require that it is before that socket-chat.js. It's so because 
+         socket-chat.js require functions of socket-chat-jquery.js -->
+    <script src="js/socket-chat-jquery.js"></script>
     <script src="js/socket-chat.js"></script>
 
 </body>
