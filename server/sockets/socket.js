@@ -1,8 +1,8 @@
-const { Socket } = require('socket.io');
 const { io } = require('../server');
 const { Users } = require('../classes/users');
+const { sendMessage } = require('../actions/actions');
 
-const user = new Users();
+const users = new Users();
 
 // Clients conections
 io.on('connection', (client) => {
@@ -21,12 +21,12 @@ io.on('connection', (client) => {
         }
 
         // El id del usuario lo obtenemos del id del objeto client - devuelve array con todos los usuarios
-        let usersConected = user.addUser(client.id, data.name);
-        console.log(user, 'ha entrado en el chat');
+        let usersConected = users.addUser(client.id, data.name);
+        console.log(users, 'ha entrado en el chat');
 
         // Cada vez que un usuario se conecta se le envía a todos los usuarios la nueva lista de usuarios
         // conectados
-        client.broadcast.emit('listUsersConected', user.getUsers());
+        client.broadcast.emit('listUsersConected', users.getUsers());
 
         // Cuando un usuario se conecta al chat se le devuelve un array con todos los usuarios conectados incluido
         // él mismo
@@ -34,20 +34,29 @@ io.on('connection', (client) => {
 
     });
 
+    // Escuchamos cuando un usuario llama a enviar mensaje y se lo emitimos a todos los usuarios
+    client.on('sendMessage', (data) => {
+
+        let user = users.getUser(client.id);
+
+        let message = sendMessage(user.userName, data.message);
+        client.broadcast.emit('sendMessage', message);
+    });
+
+
     // Cada vez que se desconecta hay que borrar el usuario para que no se dupliquen. Por ejemplo, al recargar
     // el navegador se crea una nueva instancia de socket por lo que se produce una desconexión y al conectarse
     // se crea un usuario duplicado
     client.on('disconnect', () => {
 
-        let userDeleted = user.deleteUser(client.id);
+        let userDeleted = users.deleteUser(client.id);
 
-        client.broadcast.emit('createMessage', {
-            user: 'Admin',
-            message: `${ userDeleted.userName } abandonó el chat`
-        });
+        // Se notifica a todos los clientes
+        client.broadcast.emit('sendMessage', sendMessage('Administrador', `${ userDeleted.userName } abandonó el chat`));
+
         // Cada vez que un usuario se desconecta se le envía a todos los usuarios la nueva lista de usuarios
         // conectados
-        client.broadcast.emit('listUsersConected', user.getUsers());
+        client.broadcast.emit('listUsersConected', users.getUsers());
     });
 
 });
