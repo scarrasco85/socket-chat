@@ -7,8 +7,6 @@ const users = new Users();
 // Clients conections
 io.on('connection', (client) => {
 
-    console.log('Usuario conectado');
-
     // Escucha cuando un usuario entra al chat, añade al usuario al array de Usuarios conectados y le devuelve
     // el array al usuario que se acaba de conectar
     client.on('entryToChat', (data, callback) => {
@@ -23,28 +21,27 @@ io.on('connection', (client) => {
         //Unimos el usuario a la sala
         client.join(data.chatRoom);
 
-        // Añadimos el usuario y obtenemso el array con todos los usuarios conectados. El id del usuario lo 
-        // obtenemos del id del objeto client - devuelve array con todos los usuarios
-        let usersConected = users.addUser(client.id, data.userName, data.chatRoom);
-        console.log(usersConected, 'ha entrado en el chat');
+        // Añadimos el usuario al array dónde están todos los usuarios conectados de todas las salas. El id del usuario lo 
+        // obtenemos del id del objeto client
+        users.addUser(client.id, data.userName, data.chatRoom);
 
-        // Cada vez que un usuario se conecta se le envía a todos los usuarios la nueva lista de usuarios
-        // conectados
-        client.broadcast.emit('listUsersConected', users.getUsers());
+        // Cada vez que un usuario se conecta se le envía a todos los usuarios la sala a la que el usuario se
+        // conectó nueva lista de usuarios conectados a la sala
+        client.broadcast.to(data.chatRoom).emit('listUsersConected', users.getUsersByChatRoom(data.chatRoom));
 
-        // Cuando un usuario se conecta al chat se le devuelve un array con todos los usuarios conectados incluido
-        // él mismo
-        callback(usersConected);
+        // Cuando un usuario se conecta al chat se le devuelve un array con todos los usuarios conectados a su misma sala, 
+        // incluido él mismo
+        callback(users.getUsersByChatRoom(data.chatRoom));
 
     });
 
-    // Escuchamos cuando un usuario llama a enviar mensaje y se lo emitimos a todos los usuarios
+    // Escuchamos cuando un usuario llama a enviar mensaje y se lo emitimos a los usuarios que están en su sala
     client.on('sendMessage', (data) => {
 
         let user = users.getUser(client.id);
 
         let message = sendMessage(user.userName, data.message);
-        client.broadcast.emit('sendMessage', message);
+        client.broadcast.to(user.chatRoom).emit('sendMessage', message);
     });
 
 
@@ -55,12 +52,12 @@ io.on('connection', (client) => {
 
         let userDeleted = users.deleteUser(client.id);
 
-        // Se notifica a todos los clientes
-        client.broadcast.emit('sendMessage', sendMessage('Administrador', `${ userDeleted.userName } abandonó el chat`));
+        // Se notifica a los clientes de su sala
+        client.broadcast.to(userDeleted.chatRoom).emit('sendMessage', sendMessage('Administrador', `${ userDeleted.userName } abandonó el chat`));
 
-        // Cada vez que un usuario se desconecta se le envía a todos los usuarios la nueva lista de usuarios
-        // conectados
-        client.broadcast.emit('listUsersConected', users.getUsers());
+        // Cada vez que un usuario se desconecta se le envía a todos los usuarios de su sala la nueva lista de usuarios
+        // conectados a la sala
+        client.broadcast.to(userDeleted.chatRoom).emit('listUsersConected', users.getUsersByChatRoom(userDeleted.chatRoom));
     });
 
     // Private messages, escucha cuando un cliente quiere mandar un mensaje privado a otro usuario, y se lo

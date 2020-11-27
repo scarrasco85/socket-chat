@@ -27,6 +27,18 @@ class Users {
         return user;
     }
 
+    // Get users by ChatRoom
+    getUsersByChatRoom(chatRoom) {
+
+        let usersInChatRoom = this.users.filter(user => user.chatRoom === chatRoom);
+        return usersInChatRoom;
+
+        // // Esto es lo mismo que lo anterior
+        // let usersInChatRoom = this.users.filter(user => {
+        //     return user.chatRoom === chatRoom;
+        // });
+    }
+
     getUsers() {
 
         return this.users;
@@ -48,9 +60,6 @@ class Users {
         return userDeleted;
     }
 
-    getUsersByChatRoom() {
-
-    }
 }
 
 module.exports = {
