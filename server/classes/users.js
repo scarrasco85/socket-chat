@@ -32,7 +32,7 @@ class Users {
         return this.users;
     }
 
-    getUsersByChatRoom(id) {
+    deleteUser(id) {
 
         let userDeleted = this.getUser(id);
 
@@ -46,6 +46,10 @@ class Users {
         // });
 
         return userDeleted;
+    }
+
+    getUsersByChatRoom() {
+
     }
 }
 
