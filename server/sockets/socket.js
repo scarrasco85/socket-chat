@@ -36,12 +36,14 @@ io.on('connection', (client) => {
     });
 
     // Escuchamos cuando un usuario llama a enviar mensaje y se lo emitimos a los usuarios que están en su sala
-    client.on('sendMessage', (data) => {
+    client.on('sendMessage', (data, callback) => {
 
         let user = users.getUser(client.id);
 
         let message = sendMessage(user.userName, data.message);
         client.broadcast.to(user.chatRoom).emit('sendMessage', message);
+        // Regreso el mensaje como confirmación de que se ha enviado para gestionarlo en el frontend
+        callback(message);
     });
 
 

@@ -34,19 +34,12 @@ socket.on('disconnect', function() {
     console.log('Perdimos conexión con el servidor');
 });
 
-// Send Message
-socket.emit('enviarMensaje', {
-    user: 'Sergio',
-    message: 'Hola mundo'
-}, function(resp) {
-    console.log('Server response: ', resp);
-});
-
 // Listen Mensajes
 socket.on('sendMessage', function(resp) {
-    console.log('Usuario: ', resp.userName);
-    console.log('Dice: ', resp.message);
-    console.log('Hora: ', resp.date);
+    // console.log('Usuario: ', resp.userName);
+    // console.log('Dice: ', resp.message);
+    // console.log('Hora: ', resp.date);
+    renderMessages(resp);
 });
 
 // Escuchar cuando un usuario entra o sale del chat
