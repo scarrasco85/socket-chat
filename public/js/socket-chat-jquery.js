@@ -30,23 +30,66 @@ function renderUsers(users) { // recibe arreglo de usuarios [{}, {}, {}]
 
 }
 
-function renderMessages(message) {
+// me(boolean): true if me is who send the message
+function renderMessages(message, me) {
     console.log('render', message);
 
     var html = '';
+    var date = new Date(message.date);
+    var hour = date.getHours() + ':' + date.getMinutes();
 
-    html += '<li class="animated fadeIn">';
-    html += '    <div class="chat-img"><img src="assets/images/users/1.jpg" alt="user" /></div>';
-    html += '    <div class="chat-content">';
-    html += `        <h5> ${ message.userName }</h5>`;
-    html += `        <div class="box bg-light-info">${ message.message }</div>`;
-    html += '    </div>';
-    html += '    <div class="chat-time">10:56 am</div>';
-    html += '</li>';
+    // Este inverse es el inverse que hay aquí: <div class="box bg-light-inverse">, lo pondremos en otro color si el mensaje lo manda el
+    // administrador, por ejemplo: Un usario abandonó el chat
+    var adminClass = 'inverse';
+    if (message.userName === 'Administrador') {
+        adminClass = 'danger';
+    }
+
+    if (me) {
+
+        html += '<li class="animated fadeIn">';
+        html += '    <div class="chat-img"><img src="assets/images/users/1.jpg" alt="user" /></div>';
+        html += '    <div class="chat-content">';
+        html += `        <h5>${ message.userName }</h5>`;
+        html += `        <div class="box bg-light-info">${ message.message }</div>`;
+        html += '    </div>';
+        html += `    <div class="chat-time">${ hour }</div>`;
+        html += '</li>';
+    } else {
+
+        html += '<li class="reverse">';
+        html += '    <div class="chat-content">';
+        html += `        <h5>${ message.userName }</h5>`;
+        html += `        <div class="box bg-light-${adminClass}">${ message.message }</div>`;
+        html += '    </div>'
+        if (adminClass != 'Administrador') {
+            html += `    <div class="chat-img"><img src="assets/images/users/5.jpg" alt="user" /></div>`;
+        }
+        html += `    <div class="chat-time">${ hour }</div>`;
+        html += '</li>';
+    }
 
     divChatbox.append(html);
 }
 
+// Para mantener el scroll del cuadro de mensajes siempre abajo y se mueva solo.
+// Hace calculos para ver si tiene que hacer scroll o no
+function scrollBottom() {
+
+    // selectors
+    var newMessage = divChatbox.children('li:last-child');
+
+    // heights
+    var clientHeight = divChatbox.prop('clientHeight');
+    var scrollTop = divChatbox.prop('scrollTop');
+    var scrollHeight = divChatbox.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight() || 0;
+
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+        divChatbox.scrollTop(scrollHeight);
+    }
+}
 
 // Listeners jQuery
 // Escucha el evento 'click' de cualquier elemento 'a' que haya en divUsers
@@ -88,6 +131,8 @@ formSendMessage.on('submit', function(e) {
         console.log('Server response: ', message);
         // Reseteamos el texto y le damos el foco
         txtMessage.val('').focus();
-        renderMessages(message)
+        // me = true para especificar que el mensaje lo envío yo
+        renderMessages(message, true)
+        scrollBottom();
     });
 });

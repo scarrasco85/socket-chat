@@ -28,6 +28,8 @@ io.on('connection', (client) => {
         // Cada vez que un usuario se conecta se le envía a todos los usuarios la sala a la que el usuario se
         // conectó nueva lista de usuarios conectados a la sala
         client.broadcast.to(data.chatRoom).emit('listUsersConected', users.getUsersByChatRoom(data.chatRoom));
+        // Se notifica a los clientes de su sala que el usuario ha entrado en la sala
+        client.broadcast.to(data.chatRoom).emit('sendMessage', sendMessage('Administrador', `${ data.userName } se unió al chat`));
 
         // Cuando un usuario se conecta al chat se le devuelve un array con todos los usuarios conectados a su misma sala, 
         // incluido él mismo
