@@ -116,7 +116,7 @@ formSendMessage.on('submit', function(e) {
     e.preventDefault();
 
     // trim() elimina espacios delante y detrás. Si no hay nada escrito que no se haga nada, que no se envie.
-    if (txtMessage.val().trim().lenght === 0) {
+    if (txtMessage.val().trim().length === 0) {
         return;
     }
 

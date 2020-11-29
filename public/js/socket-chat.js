@@ -16,6 +16,8 @@ var user = {
     chatRoom: params.get('chatRoom')
 };
 
+var chatRoomTitle = $('#chatRoomTitle');
+
 socket.on('connect', function() {
     console.log('Conectado al servidor');
 
@@ -24,6 +26,8 @@ socket.on('connect', function() {
     // Solicita que un usuario entre al chat
     socket.emit('entryToChat', user, function(resp) {
         console.log('users conected: ', resp);
+
+        chatRoomTitle.html(user.chatRoom);
         // renderUsers():definida en socket-chat-jquery.js, se importa antes que este archivo en chat.html
         // por eso la detecta
         renderUsers(resp);
