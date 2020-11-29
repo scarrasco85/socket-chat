@@ -27,7 +27,6 @@ socket.on('connect', function() {
         // renderUsers():definida en socket-chat-jquery.js, se importa antes que este archivo en chat.html
         // por eso la detecta
         renderUsers(resp);
-        scrollBottom();
     });
 });
 
@@ -42,6 +41,7 @@ socket.on('sendMessage', function(resp) {
     // console.log('Hora: ', resp.date);
     // me = false, para especificar que el mensaje lo ha escrito otra persona
     renderMessages(resp, false);
+    scrollBottom();
 });
 
 // Escuchar cuando un usuario entra o sale del chat
