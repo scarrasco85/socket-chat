@@ -5,6 +5,7 @@ var divUsers = $('#divUsers');
 var formSendMessage = $('#formSendMessage');
 var txtMessage = $('#txtMessage');
 var divChatbox = $('#divChatbox');
+var searchUser = $('#searchUser');
 
 
 
@@ -134,5 +135,19 @@ formSendMessage.on('submit', function(e) {
         // me = true para especificar que el mensaje lo envío yo
         renderMessages(message, true)
         scrollBottom();
+    });
+});
+
+searchUser.on('keyup', function() {
+    console.log('Cambiado!');
+    let searched = searchUser.val();
+
+    socket.emit('search', searched, function(resp) {
+        console.log('users searched: ', resp);
+
+
+        // renderUsers():definida en socket-chat-jquery.js, se importa antes que este archivo en chat.html
+        // por eso la detecta
+        renderUsers(resp);
     });
 });

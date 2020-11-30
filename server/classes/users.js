@@ -39,6 +39,12 @@ class Users {
         // });
     }
 
+    getUsersBySearched(searched) {
+
+        let usersSearched = this.users.filter(user => user.userName.toLowerCase().includes(searched.toLowerCase()));
+        return usersSearched;
+    }
+
     getUsers() {
 
         return this.users;

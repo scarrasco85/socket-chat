@@ -73,4 +73,10 @@ io.on('connection', (client) => {
         client.broadcast.to(data.id_receptor).emit('privateMessage', sendMessage(userEmisor.userName, data.message));
     });
 
+    client.on('search', (searched, callback) => {
+        let usersSearched = users.getUsersBySearched(searched);
+
+        callback(usersSearched);
+    });
+
 });
