@@ -51,6 +51,5 @@ By default the app runs in: [http://localhost:3000/](http://localhost:3000/).
 
 ## Do you want to see the application running? 🚀
 
-Coming soon...
+[Click here!](https://socket-chat-poliche.herokuapp.com/)
 
----
