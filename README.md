@@ -40,3 +40,17 @@ By default the app runs in: [http://localhost:3000/](http://localhost:3000/).
 - Git/Git Hub
 - Heroku
 ---
+
+## Some working samples ⚙️
+
+![](screenshots/enter-chat.png)
+***
+![](screenshots/sala-chat.png)
+---
+***
+
+## Do you want to see the application running? 🚀
+
+Coming soon...
+
+---
